@@ -3,3 +3,6 @@ cityscale
 *.pyc
 *.lprof
 *.png
+
+# local checkpoints
+sam_ckpts/
