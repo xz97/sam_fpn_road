@@ -9,3 +9,9 @@ cityscale/
 __pycache__/
 **/__pycache__/
 *.pyc
+
+# local datasets / checkpoints / logs (do not commit)
+cityscale/
+spacenet/
+sam_ckpts/
+lightning_logs/
