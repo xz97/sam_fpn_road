@@ -1,18 +1,11 @@
-# outputs / artifacts
-save/
-spacenet_metrics/save/
-**/*.ckpt
-**/*.pt
-**/*.pth
-**/*.log
-**/mask/
-**/viz/
-**/graph/
-**/results/
+# datasets / local data (never commit)
+spacenet/
+cityscale/
 
-# temp / local
-**/*.bak
-**/*.bak_*
-**/prop.json
-gt.json
-prop.json
+# generated outputs
+*.csv
+
+# python cache
+__pycache__/
+**/__pycache__/
+*.pyc
