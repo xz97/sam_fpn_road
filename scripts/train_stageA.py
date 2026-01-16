@@ -88,7 +88,7 @@ def main():
         mode="min",
         save_top_k=1,              # keep only best
         save_last=True,            # keep last.ckpt
-        every_n_train_steps=args.every_n_train_steps,  # update last.ckpt periodically
+        every_n_epochs=1,  # save once per epoch
         auto_insert_metric_name=False,
     )
 
