@@ -1,0 +1,120 @@
+import os, json, subprocess, socket, datetime
+from argparse import ArgumentParser
+
+import lightning.pytorch as pl
+from lightning.pytorch.callbacks import ModelCheckpoint, LearningRateMonitor
+from lightning.pytorch.loggers import CSVLogger
+
+import torch
+from utils import load_config
+from dataset import SatMapDataset, graph_collate_fn
+from model import SAMRoad
+from torch.utils.data import DataLoader
+
+
+def get_git_commit():
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    except Exception:
+        return "unknown"
+
+
+def main():
+    parser = ArgumentParser()
+    parser.add_argument("--config", required=True)
+    parser.add_argument("--run_dir", required=True)
+    parser.add_argument("--resume", default=None, help="path to ckpt_last.ckpt / last.ckpt")
+    parser.add_argument("--precision", default=16, type=int, help="16 or 32")
+    parser.add_argument("--every_n_train_steps", default=2000, type=int, help="update last.ckpt interval")
+    args = parser.parse_args()
+
+    # 0) repo root (important: dataset paths are relative like ./spacenet/...)
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    os.chdir(repo_root)
+
+    # 1) run dir structure
+    run_dir = os.path.abspath(args.run_dir)
+    os.makedirs(run_dir, exist_ok=True)
+    ckpt_dir = os.path.join(run_dir, "checkpoints")
+    os.makedirs(ckpt_dir, exist_ok=True)
+
+    # 2) record meta
+    meta = {
+        "time": datetime.datetime.now().isoformat(),
+        "host": socket.gethostname(),
+        "git_commit": get_git_commit(),
+        "cmd": " ".join(os.sys.argv),
+        "cwd": os.getcwd(),
+    }
+    with open(os.path.join(run_dir, "run_meta.json"), "w") as f:
+        json.dump(meta, f, indent=2)
+
+    # 3) load config and also save effective config copy
+    config = load_config(args.config)
+    with open(os.path.join(run_dir, "config_path.txt"), "w") as f:
+        f.write(args.config + "\n")
+
+    # 4) model
+    net = SAMRoad(config)
+
+    # 5) datasets / loaders
+    train_ds = SatMapDataset(config, is_train=True, dev_run=False)
+    val_ds   = SatMapDataset(config, is_train=False, dev_run=False)
+
+    train_loader = DataLoader(
+        train_ds,
+        batch_size=config.BATCH_SIZE,
+        shuffle=True,
+        num_workers=config.DATA_WORKER_NUM,
+        pin_memory=True,
+        collate_fn=graph_collate_fn,
+    )
+    val_loader = DataLoader(
+        val_ds,
+        batch_size=config.BATCH_SIZE,
+        shuffle=False,
+        num_workers=config.DATA_WORKER_NUM,
+        pin_memory=True,
+        collate_fn=graph_collate_fn,
+    )
+
+    # 6) checkpoint policy: only last + best
+    # IMPORTANT: set MONITOR to the val metric key used in model.py self.log(...)
+    MONITOR = "val_loss"   # <-- if your model logs a different key, change this line
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=ckpt_dir,
+        filename="best-{epoch:02d}-{step:07d}-{" + MONITOR + ":.4f}",
+        monitor=MONITOR,
+        mode="min",
+        save_top_k=1,              # keep only best
+        save_last=True,            # keep last.ckpt
+        every_n_train_steps=args.every_n_train_steps,  # update last.ckpt periodically
+        auto_insert_metric_name=False,
+    )
+
+    lr_monitor = LearningRateMonitor(logging_interval="step")
+
+    # 7) logger: CSV only (stable, no login needed)
+    logger = CSVLogger(save_dir=run_dir, name="logs")
+
+    trainer = pl.Trainer(
+        default_root_dir=run_dir,
+        max_epochs=config.TRAIN_EPOCHS,
+        check_val_every_n_epoch=1,
+        num_sanity_val_steps=2,
+        callbacks=[checkpoint_callback, lr_monitor],
+        logger=logger,
+        precision=args.precision,
+        log_every_n_steps=50,
+    )
+
+    ckpt_path = args.resume if args.resume else None
+    trainer.fit(net, train_dataloaders=train_loader, val_dataloaders=val_loader, ckpt_path=ckpt_path)
+
+    print("[OK] done. run_dir =", run_dir)
+    print("[OK] best_ckpt =", checkpoint_callback.best_model_path)
+    print("[OK] last_ckpt =", os.path.join(ckpt_dir, "last.ckpt"))
+
+
+if __name__ == "__main__":
+    main()
