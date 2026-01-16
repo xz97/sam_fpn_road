@@ -25,6 +25,9 @@ for file_name in name_list :
         apls.append(float(lines[0].split(' ')[-1]))
         output_apls.append([file_name,float(lines[0].split(' ')[-1])])
 
-print('APLS',np.sum(apls)/len(apls))
+apls_np = np.array(apls, dtype=float)
+valid = np.isfinite(apls_np)
+print('APLS', float(np.nanmean(apls_np)))
+print('APLS_valid', int(valid.sum()), '/', int(len(apls_np)))
 with open(f'../{args.dir}/results/apls.json','w') as jf:
     json.dump({'apls':output_apls,'final_APLS':np.mean(apls)},jf)

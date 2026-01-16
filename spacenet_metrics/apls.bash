@@ -16,7 +16,6 @@ do
         python ./apls/convert.py "../${data_dir}/RGB_1.0_meter/${gt_graph}" gt.json
         python ./apls/convert.py "../${dir}/graph/${i}.p" prop.json
         
-        /usr/local/go/bin/go run ./apls/main.go gt.json prop.json ../$dir/results/apls/$i.txt  spacenet
-    fi
+          (cd apls && go run main.go ../gt.json ../prop.json ../..//results/apls/.txt spacenet)    fi
 done
 python apls.py --dir $dir
