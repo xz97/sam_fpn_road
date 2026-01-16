@@ -1,28 +1,18 @@
-spacenet
-cityscale
-*.pyc
-*.lprof
-*.png
+# outputs / artifacts
+save/
+spacenet_metrics/save/
+**/*.ckpt
+**/*.pt
+**/*.pth
+**/*.log
+**/mask/
+**/viz/
+**/graph/
+**/results/
 
-# local checkpoints
-sam_ckpts/
-
-# local checkpoints
-sam_ckpts/
-
-# datasets & outputs (must never be committed)
-spacenet/
-cityscale/
-datasets/
-processed/
-outputs/
-runs/
-ckpt_cache/
-*.pt
-*.ckpt
-*.pth
-*.log
-*.csv
-
-# notebooks temp
-.ipynb_checkpoints/
+# temp / local
+**/*.bak
+**/*.bak_*
+**/prop.json
+gt.json
+prop.json
