@@ -56,3 +56,7 @@ spacenet_metrics/save/
 # local temp files
 spacenet_metrics/gt.json
 spacenet_metrics/prop.json
+
+# datasets (local only)
+cityscale/
+spacenet/
