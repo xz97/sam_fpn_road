@@ -1,3 +1,10 @@
 Setting,APLS,TOPO,Precision,Recall,topo_txt_count,apls_txt_count
 SpaceNet 8x8,0.6624512252747253,nan,0.8956856390233188,0.6514407917099206,382,382
 SpaceNet 4x4,0.6573226895604395,nan,0.8958277961087944,0.6593391631069341,382,382
+
+
+
+Notes
+APLS is averaged over per-tile txt files in results/apls/ (NaNs excluded).
+TOPO/Precision/Recall are averaged over per-tile txt files in results/topo/ (NaNs excluded).
+*_valid/total columns in the CSV help diagnose missing/degenerate tiles.
