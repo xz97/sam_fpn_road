@@ -4,7 +4,8 @@ SpaceNet 4x4,0.6573226895604395,nan,0.8958277961087944,0.6593391631069341,382,38
 
 
 
-Notes
-APLS is averaged over per-tile txt files in results/apls/ (NaNs excluded).
-TOPO/Precision/Recall are averaged over per-tile txt files in results/topo/ (NaNs excluded).
-*_valid/total columns in the CSV help diagnose missing/degenerate tiles.
+## Notes
+- APLS is averaged over per-tile txt files in `results/apls/` (NaNs excluded).
+- TOPO/Precision/Recall are averaged over per-tile txt files in `results/topo/` (NaNs excluded).
+- `*_valid/total` columns in the CSV help diagnose missing/degenerate tiles.
+
