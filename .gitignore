@@ -31,3 +31,8 @@ spacenet_metrics/save/
 # caches
 **/__pycache__/
 .DS_Store
+
+# allow committing experiment summary tables
+!results/
+!results/*.csv
+!results/*.md
