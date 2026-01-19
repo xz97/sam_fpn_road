@@ -52,3 +52,7 @@ spacenet_metrics/save/
 # caches
 **/__pycache__/
 .DS_Store
+
+# local temp files
+spacenet_metrics/gt.json
+spacenet_metrics/prop.json
