@@ -60,3 +60,19 @@ spacenet_metrics/prop.json
 # datasets (local only)
 cityscale/
 spacenet/
+
+# ===== local data & large artifacts (do NOT commit) =====
+spacenet/
+cityscale/
+sam_ckpts/
+lightning_logs/
+save/
+spacenet_metrics/save/
+*.ckpt
+*.pth
+*.pt
+*.log
+
+# caches
+**/__pycache__/
+.DS_Store
