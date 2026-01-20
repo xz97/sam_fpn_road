@@ -92,3 +92,7 @@ cityscale_metrics/cityscale
 # local datasets
 cityscale/
 spacenet/
+
+# local datasets
+cityscale/
+spacenet/
