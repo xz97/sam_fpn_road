@@ -76,3 +76,10 @@ spacenet_metrics/save/
 # caches
 **/__pycache__/
 .DS_Store
+
+# large runtime outputs
+save/**/mask/
+save/**/viz/
+save/**/graph/
+/mnt/data/outputs/
+*.ckpt
