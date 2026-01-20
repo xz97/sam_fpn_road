@@ -96,3 +96,7 @@ spacenet/
 # local datasets
 cityscale/
 spacenet/
+
+# --- local datasets (do not commit) ---
+/cityscale/
+/spacenet/
