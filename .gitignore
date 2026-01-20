@@ -100,3 +100,4 @@ spacenet/
 # --- local datasets (do not commit) ---
 /cityscale/
 /spacenet/
+outputs/
