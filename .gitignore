@@ -88,3 +88,7 @@ save/**/graph/
 cityscale/
 spacenet/
 cityscale_metrics/cityscale
+
+# local datasets
+cityscale/
+spacenet/
