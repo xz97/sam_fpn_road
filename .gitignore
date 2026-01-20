@@ -83,3 +83,8 @@ save/**/viz/
 save/**/graph/
 /mnt/data/outputs/
 *.ckpt
+
+# local datasets / symlinks (do not commit)
+cityscale/
+spacenet/
+cityscale_metrics/cityscale
