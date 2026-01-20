@@ -15,3 +15,4 @@
 - Do not commit datasets, checkpoints, or large runtime outputs.
 - Use python3 (not python).
 - This repo writes a single-row CSV per run; rerun will append a new row.
+- Single source of truth： s3://samroad-20260115-5976/metrics_cache/cityscale_toponet_8x8_best/
