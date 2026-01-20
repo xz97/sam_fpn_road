@@ -1,0 +1,2 @@
+Setting,APLS,TOPO,Precision,Recall,inference_time_sec,apls_txt_total,apls_txt_used,topo_txt_total,topo_txt_used,bad_tiles_apls,bad_tiles_topo,summary_json
+CityScale 8x8 (StageA),,,,,594.2654361724854,,,,,,,save/cityscale_toponet_8x8_best/score/summary_cityscale_stageA.json
