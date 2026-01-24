@@ -114,3 +114,31 @@ outputs/
 !results/StageE_*.csv
 !results/StageE_*.json
 !results/StageA_ablation_table.csv
+
+# ===== Local datasets / symlinks (never commit) =====
+/cityscale/
+/spacenet/
+
+# ===== CityScale metrics temp artifacts (never commit) =====
+/cityscale_metrics/gt.json
+/cityscale_metrics/prop.json
+/cityscale_metrics/*.bak_*
+/cityscale_metrics/*.bak_fix_*
+
+# ===== StageA intermediate summaries (keep only final "train_infer" + ablation table) =====
+/results/StageA_spacenet_16x16_*.csv
+/results/StageA_spacenet_16x16_*.json
+/results/StageA_spacenet_16x16_train_infer_eval.*
+/results/StageA_spacenet_16x16_stageA_summary.*
+
+# ===== Local helper scripts that are not part of the canonical pipeline =====
+/scripts/summarize_cityscale_metrics.py
+/scripts/summarize_cityscale_metrics_from_log.py
+/scripts/summarize_cityscale_stageA.py
+/scripts/summarize_spacenet_16x16_stageA.py
+/scripts/summarize_spacenet_metrics_robust.py
+/scripts/summarize_topo_apls_robust.py
+/scripts/eval_apls_spacenet.sh
+/scripts/eval_cityscale_metrics.sh
+/scripts/eval_cityscale_stage.sh
+
