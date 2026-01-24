@@ -101,3 +101,16 @@ spacenet/
 /cityscale/
 /spacenet/
 outputs/
+
+# ===== allow tracking stage result tables =====
+!results/StageA_*.csv
+!results/StageA_*.json
+!results/StageB_*.csv
+!results/StageB_*.json
+!results/StageC_*.csv
+!results/StageC_*.json
+!results/StageD_*.csv
+!results/StageD_*.json
+!results/StageE_*.csv
+!results/StageE_*.json
+!results/StageA_ablation_table.csv
