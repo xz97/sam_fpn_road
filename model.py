@@ -1,4 +1,5 @@
 import torch
+from losses.cldice import cldice_loss
 import torch.nn.functional as F
 from torch import nn
 
@@ -601,7 +602,7 @@ class SAMRoad(pl.LightningModule):
 
         if self.use_cldice and self.cldice_w > 0:
              road_prob = torch.sigmoid(road_logits)
-             road_cl = cldice_loss(road_prob, road_mask, iters=self.cldice_it, smooth=self.cldice_eps)
+             road_cl = cldice_loss(road_prob, road_mask, iters=self.cldice_iters, smooth=self.cldice_smooth)
              road_loss = road_bce + self.cldice_w * road_cl
 
         mask_loss = key_loss + road_loss
