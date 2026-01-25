@@ -1,0 +1,40 @@
+{
+  "rows": [
+    {
+      "stage": "A",
+      "dataset": "spacenet",
+      "setting": "SpaceNet 16x16 (stageA)",
+      "APLS": 0.6860703068181818,
+      "TOPO": 0.755687100230051,
+      "Precision": 0.8285320844191961,
+      "Recall": 0.7010625166936558
+    },
+    {
+      "stage": "A",
+      "dataset": "cityscale",
+      "setting": "CityScale 16x16 (stageA)",
+      "APLS": 0.5886081111111111,
+      "TOPO": 0.7683627368283057,
+      "Precision": 0.8808322411525299,
+      "Recall": 0.6852318156466567
+    },
+    {
+      "stage": "B",
+      "dataset": "spacenet",
+      "setting": "SpaceNet 16x16 (stageB)",
+      "APLS": 0.70278546,
+      "TOPO": 0.7937956364120718,
+      "Precision": 0.9320208699214366,
+      "Recall": 0.6912747425260352
+    },
+    {
+      "stage": "B",
+      "dataset": "cityscale",
+      "setting": "CityScale 16x16 (stageB)",
+      "APLS": 0.5609286666666667,
+      "TOPO": 0.7793235282360955,
+      "Precision": 0.8796706280911508,
+      "Recall": 0.7021038976908357
+    }
+  ]
+}
