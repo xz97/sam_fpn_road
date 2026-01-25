@@ -129,3 +129,10 @@ results/repro/
 __pycache__/
 *.pyc
 
+
+# ==== DO NOT COMMIT: datasets / temp metric files ====
+cityscale/
+spacenet/
+cityscale_metrics/gt.json
+cityscale_metrics/prop.json
+
