@@ -1,4 +1,4 @@
-import os
+Cimport os
 import json
 import subprocess
 import socket
@@ -55,6 +55,17 @@ def main():
     parser.add_argument("--every_n_train_steps", default=2000, type=int, help="(reserved) update interval")
     parser.add_argument("--log_every_n_steps", default=200, type=int, help="reduce console spam")
     args = parser.parse_args()
+
+
+    if args.init_ckpt and args.resume:
+        raise ValueError(
+            "Do NOT pass --resume together with --init_ckpt. "
+            "--init_ckpt is weights-only init (fresh optimizer), "
+            "--resume is full-state resume (optimizer/scheduler restored)."
+       )
+
+
+    
 
     # 0) repo root (important: dataset paths are relative like ./cityscale/...)
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -155,26 +166,49 @@ def main():
         enable_model_summary=False,
     )
 
-    ckpt_path = args.resume if args.resume else None
-    if ckpt_path and (not os.path.exists(ckpt_path)):
-        print(f"[WARN] resume ckpt not found: {ckpt_path}. Train from scratch.")
-        ckpt_path = None
+    # ------------------------------
+    # Resume (full state) - ONLY when args.resume is set AND init_ckpt is NOT used
+    # ------------------------------
+    ckpt_path = None
+    if args.resume:
+        ckpt_path = args.resume
+        if ckpt_path and (not os.path.exists(ckpt_path)):
+            print(f"[WARN] resume ckpt not found: {ckpt_path}. Train from scratch.")
+            ckpt_path = None
 
     # ------------------------------
     # [INIT_CKPT] weights-only init (paper-friendly)
+    #   - load model weights only (no optimizer/scheduler)
+    #   - force ckpt_path=None to guarantee NOT resuming
     # ------------------------------
-    if getattr(args, 'init_ckpt', None):
-        ckpt = torch.load(args.init_ckpt, map_location='cpu')
-        state_dict = ckpt.get('state_dict', ckpt)
+    if args.init_ckpt:
+        if not os.path.exists(args.init_ckpt):
+            raise FileNotFoundError(f"init_ckpt not found: {args.init_ckpt}")
+
+        ckpt = torch.load(args.init_ckpt, map_location="cpu")
+        state_dict = ckpt.get("state_dict", ckpt)
+
         missing, unexpected = net.load_state_dict(state_dict, strict=False)
-        print(f"[INIT_CKPT] loaded: {args.init_ckpt}")
+        print(f"[INIT_CKPT] loaded weights-only: {args.init_ckpt}")
         print(f"[INIT_CKPT] missing={len(missing)} unexpected={len(unexpected)}")
         if missing:
-            print('[INIT_CKPT] missing(sample):', missing[:20])
+            print("[INIT_CKPT] missing(sample):", missing[:20])
         if unexpected:
-            print('[INIT_CKPT] unexpected(sample):', unexpected[:20])
+            print("[INIT_CKPT] unexpected(sample):", unexpected[:20])
 
-    trainer.fit(net, train_dataloaders=train_loader, val_dataloaders=val_loader, ckpt_path=ckpt_path)
+        # Hard guarantee: weights-only init must NOT resume trainer state
+        ckpt_path = None
+        print("[INIT_CKPT] ckpt_path forced to None (no resume). Fresh optimizer/scheduler.")
+
+    # Train
+    trainer.fit(
+        net,
+        train_dataloaders=train_loader,
+        val_dataloaders=val_loader,
+        ckpt_path=ckpt_path,
+    )
+ 
+    
 
     print("[OK] done. run_dir =", run_dir)
     print("[OK] best_ckpt =", checkpoint_callback.best_model_path)
