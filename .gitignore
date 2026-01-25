@@ -136,3 +136,10 @@ spacenet/
 cityscale_metrics/gt.json
 cityscale_metrics/prop.json
 
+
+# ==== DO NOT COMMIT: datasets / temp metric files ====
+cityscale/
+spacenet/
+cityscale_metrics/gt.json
+cityscale_metrics/prop.json
+
