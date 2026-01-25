@@ -102,3 +102,30 @@ spacenet/
 /spacenet/
 outputs/
 results/repro/
+
+# ==== DATA / OUTPUTS (DO NOT COMMIT) ====
+/save/
+/outputs/
+/mnt/
+/datasets/
+/cityscale/
+/spacenet/RGB_1.0_meter/
+
+# large artifacts
+*.ckpt
+*.pth
+*.pt
+*.p
+*.pickle
+*.npy
+*.npz
+
+# logs
+*.log
+**/logs/
+**/checkpoints/
+
+# python cache
+__pycache__/
+*.pyc
+
