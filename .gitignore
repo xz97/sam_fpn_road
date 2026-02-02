@@ -142,3 +142,8 @@ outputs/
 /scripts/eval_cityscale_metrics.sh
 /scripts/eval_cityscale_stage.sh
 
+
+# metrics temp files
+**/gt.json
+**/prop.json
+**/*.bak_*/
