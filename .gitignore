@@ -153,3 +153,11 @@ spacenet/
 spacenet_metrics/spacenet/
 spacenet_metrics/spacenet_toponet_16x16_stageB_cldice/
 spacenet_toponet_16x16_stageB_cldice/
+
+# ---- local training artifacts (never commit) ----
+lightning_logs/
+sam_ckpts/
+results/final/*.csv
+
+# cityscale_metrics local copies / accidental nested dirs
+cityscale_metrics/cityscale/
