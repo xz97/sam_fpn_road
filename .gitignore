@@ -147,3 +147,9 @@ outputs/
 **/gt.json
 **/prop.json
 **/*.bak_*/
+
+# ---- local data / workaround dirs (never commit) ----
+spacenet/
+spacenet_metrics/spacenet/
+spacenet_metrics/spacenet_toponet_16x16_stageB_cldice/
+spacenet_toponet_16x16_stageB_cldice/
