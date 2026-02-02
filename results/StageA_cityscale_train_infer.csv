@@ -1,2 +1,2 @@
-Setting,APLS,TOPO,Precision,Recall,inference_time_sec,apls_txt_total,apls_txt_used,topo_txt_total,topo_txt_used,bad_tiles_apls,bad_tiles_topo,summary_json
-CityScale 8x8 (StageA),,,,,594.2654361724854,,,,,,,save/cityscale_toponet_8x8_best/score/summary_cityscale_stageA.json
+Setting,DIR,eval_log,APLS,TOPO,Precision,Recall,graph_p_total,topo_txt_total,apls_txt_total,apls_txt_used
+CityScale 16x16 (stageA),save/cityscale_toponet_16x16_stageA,/mnt/data/outputs/20260123_cityscale_eval_16x16_stageA.log,0.5886081111111111,0.7683627368283057,0.8808322411525299,0.6852318156466567,27,27,27,27

@@ -1,145 +1,33 @@
-# datasets / local data (never commit)
-spacenet/
-cityscale/
-
-# generated outputs
-*.csv
-
-# python cache
+# Python
 __pycache__/
-**/__pycache__/
 *.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
 
-# local datasets / checkpoints / logs (do not commit)
-cityscale/
-spacenet/
-sam_ckpts/
-lightning_logs/
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
 
-# ===== local data & large artifacts (do NOT commit) =====
-spacenet/
-cityscale/
-sam_ckpts/
-lightning_logs/
-save/
-spacenet_metrics/save/
-*.ckpt
-*.pth
-*.pt
+# Logs / outputs
+logs/
 *.log
 
-# caches
-**/__pycache__/
-.DS_Store
-
-# allow committing experiment summary tables
-!results/
-!results/*.csv
-!results/*.md
-
-# ===== local data & large artifacts (do NOT commit) =====
-spacenet/
-cityscale/
-sam_ckpts/
-lightning_logs/
-save/
-spacenet_metrics/save/
-*.ckpt
-*.pth
-*.pt
-*.log
-
-# caches
-**/__pycache__/
-.DS_Store
-
-# local temp files
-spacenet_metrics/gt.json
-spacenet_metrics/prop.json
-
-# datasets (local only)
-cityscale/
-spacenet/
-
-# ===== local data & large artifacts (do NOT commit) =====
-spacenet/
-cityscale/
-sam_ckpts/
-lightning_logs/
-save/
-spacenet_metrics/save/
-*.ckpt
-*.pth
-*.pt
-*.log
-
-# caches
-**/__pycache__/
-.DS_Store
-
-# large runtime outputs
-save/**/mask/
-save/**/viz/
-save/**/graph/
-/mnt/data/outputs/
-*.ckpt
-
-# local datasets / symlinks (do not commit)
-cityscale/
-spacenet/
-cityscale_metrics/cityscale
-
-# local datasets
-cityscale/
-spacenet/
-
-# local datasets
-cityscale/
-spacenet/
-
-# --- local datasets (do not commit) ---
-/cityscale/
-/spacenet/
+# Checkpoints / runs (local)
 outputs/
-results/repro/
+save/
+runs/
 
-# ==== DATA / OUTPUTS (DO NOT COMMIT) ====
-/save/
-/outputs/
-/mnt/
-/datasets/
-/cityscale/
-/spacenet/RGB_1.0_meter/
+# metrics temp files
+**/gt.json
+**/prop.json
+**/*.bak_*/
 
-# large artifacts
-*.ckpt
-*.pth
-*.pt
-*.p
-*.pickle
-*.npy
-*.npz
-
-# logs
-*.log
-**/logs/
-**/checkpoints/
-
-# python cache
-__pycache__/
-*.pyc
-
-
-# ==== DO NOT COMMIT: datasets / temp metric files ====
-cityscale/
+# local data / workaround dirs (never commit)
 spacenet/
-cityscale_metrics/gt.json
-cityscale_metrics/prop.json
-
-
-# ==== DO NOT COMMIT: datasets / temp metric files ====
-cityscale/
-spacenet/
-cityscale_metrics/gt.json
-cityscale_metrics/prop.json
-
+spacenet_metrics/spacenet/
+spacenet_metrics/spacenet_toponet_16x16_stageB_cldice/
+spacenet_toponet_16x16_stageB_cldice/

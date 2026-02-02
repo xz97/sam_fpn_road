@@ -1,0 +1,13 @@
+{
+  "Setting": "CityScale 16x16 (stageA)",
+  "DIR": "save/cityscale_toponet_16x16_stageA",
+  "eval_log": "/mnt/data/outputs/20260123_cityscale_eval_16x16_stageA.log",
+  "TOPO": 0.7683627368283057,
+  "Precision": 0.8808322411525299,
+  "Recall": 0.6852318156466567,
+  "APLS": 0.5886081111111111,
+  "graph_p_total": 27,
+  "topo_txt_total": 27,
+  "apls_txt_total": 27,
+  "apls_txt_used": 27
+}
