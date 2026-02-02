@@ -185,6 +185,34 @@ class _LoRA_qkv(nn.Module):
         qkv[:, :, :, -self.dim:] += new_v
         return qkv
 
+class SimpleFPN(nn.Module):
+    """
+    Minimal FPN:
+    inputs: C3 (1/8), C4 (1/16), C5 (1/32)
+    outputs: P3, P4, P5 (same channels)
+    """
+    def __init__(self, in_channels_list, out_channels):
+        super().__init__()
+        assert len(in_channels_list) == 3
+        c3, c4, c5 = in_channels_list
+
+        self.lateral3 = nn.Conv2d(c3, out_channels, kernel_size=1)
+        self.lateral4 = nn.Conv2d(c4, out_channels, kernel_size=1)
+        self.lateral5 = nn.Conv2d(c5, out_channels, kernel_size=1)
+
+        self.out3 = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1)
+        self.out4 = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1)
+        self.out5 = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1)
+
+    def forward(self, c3, c4, c5):
+        p5 = self.lateral5(c5)
+        p4 = self.lateral4(c4) + F.interpolate(p5, scale_factor=2, mode="nearest")
+        p3 = self.lateral3(c3) + F.interpolate(p4, scale_factor=2, mode="nearest")
+
+        p3 = self.out3(p3)
+        p4 = self.out4(p4)
+        p5 = self.out5(p5)
+        return p3, p4, p5
 
 
 class SAMRoad(pl.LightningModule):
@@ -298,7 +326,15 @@ class SAMRoad(pl.LightningModule):
         #### TOPONet
         self.bilinear_sampler = BilinearSampler(config)
         self.topo_net = TopoNet(config, encoder_output_dim)
-
+        # ---- Stage C: FPN (Phase-1 uses only P4 for map_decoder) ----
+        self.use_fpn = getattr(config, "USE_FPN", False)
+        if self.use_fpn:
+            fpn_out = getattr(config, "FPN_OUT_DIM", encoder_output_dim)
+            self.fpn = SimpleFPN(
+                in_channels_list=[encoder_output_dim, encoder_output_dim, encoder_output_dim],
+                out_channels=fpn_out
+            )
+        
 
         #### LORA
         if config.ENCODER_LORA:
@@ -442,8 +478,20 @@ class SAMRoad(pl.LightningModule):
             )
             mask_scores = torch.sigmoid(mask_logits)
         else:
-            mask_logits = self.map_decoder(image_embeddings)
+            if self.use_fpn:
+                c4 = image_embeddings                                  # 1/16
+                c5 = F.max_pool2d(c4, kernel_size=2, stride=2)         # 1/32
+                c3 = F.interpolate(c4, scale_factor=2, mode="nearest") # 1/8 (pseudo)
+                p3, p4, p5 = self.fpn(c3, c4, c5)
+
+                mask_logits = self.map_decoder(p4)  # Phase-1: only use P4
+            else:
+                mask_logits = self.map_decoder(image_embeddings)
+
             mask_scores = torch.sigmoid(mask_logits)
+
+            
+
         
         ## Predicts local topology
         point_features = self.bilinear_sampler(image_embeddings, graph_points)
@@ -487,8 +535,20 @@ class SAMRoad(pl.LightningModule):
             )
             mask_scores = torch.sigmoid(mask_logits)
         else:
-            mask_logits = self.map_decoder(image_embeddings)
+            if self.use_fpn:
+                c4 = image_embeddings                                  # 1/16
+                c5 = F.max_pool2d(c4, kernel_size=2, stride=2)         # 1/32
+                c3 = F.interpolate(c4, scale_factor=2, mode="nearest") # 1/8 (pseudo)
+                p3, p4, p5 = self.fpn(c3, c4, c5)
+
+                mask_logits = self.map_decoder(p4)  # Phase-1: only use P4
+            else:
+                mask_logits = self.map_decoder(image_embeddings)
+
             mask_scores = torch.sigmoid(mask_logits)
+
+
+        
         
         # [B, H, W, 2]
         mask_scores = mask_scores.permute(0, 2, 3, 1)
