@@ -48,6 +48,12 @@ def main():
     parser.add_argument("--config", required=True)
     parser.add_argument("--run_dir", required=True)
     parser.add_argument("--resume", default=None, help="path to last.ckpt / ckpt_last.ckpt")
+    parser.add_argument(
+        "--init_ckpt",
+        default=None,
+        type=str,
+        help="weights-only init: load model state_dict (no optimizer/scheduler). DO NOT combine with --resume.",
+    )
     # IMPORTANT: Lightning 更推荐 16-mixed；但为兼容你旧口径，仍接受 16/32
     parser.add_argument("--precision", default=16, type=int, help="16 or 32")
     parser.add_argument("--every_n_train_steps", default=2000, type=int, help="(reserved) update interval")
@@ -98,6 +104,26 @@ def main():
     # 4) model
     net = SAMRoad(config)
 
+
+    # ------------------------------
+    # [INIT_CKPT] weights-only init (paper-friendly)
+    # - Load only model weights
+    # - Do NOT restore optimizer/scheduler
+    # ------------------------------
+    if getattr(args, "init_ckpt", None):
+        if not os.path.exists(args.init_ckpt):
+            raise FileNotFoundError(f"[INIT_CKPT] not found: {args.init_ckpt}")
+        if args.resume:
+            raise ValueError("[INIT_CKPT] Do not use --resume together with --init_ckpt (that becomes resume).")
+        ckpt = torch.load(args.init_ckpt, map_location="cpu")
+        state_dict = ckpt.get("state_dict", ckpt)
+        missing, unexpected = net.load_state_dict(state_dict, strict=False)
+        print(f"[INIT_CKPT] loaded: {args.init_ckpt}")
+        print(f"[INIT_CKPT] missing={len(missing)} unexpected={len(unexpected)}")
+        if missing:
+            print("[INIT_CKPT] missing(sample):", missing[:20])
+        if unexpected:
+            print("[INIT_CKPT] unexpected(sample):", unexpected[:20])
     # 5) datasets / loaders
     train_ds = SatMapDataset(config, is_train=True, dev_run=False)
     val_ds   = SatMapDataset(config, is_train=False, dev_run=False)
