@@ -3,6 +3,14 @@ import os
 import argparse
 import json
 
+def _resolve_dir(d: str) -> str:
+    import os
+    # d can be abs (/home/ubuntu/...) or rel (save/save/xxx)
+    if os.path.isabs(d):
+        return d
+    return os.path.join("..", d)
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--dir', type=str)
 
@@ -10,10 +18,10 @@ args = parser.parse_args()
 
 apls = []
 output_apls = []
-name_list = os.listdir(f'../{args.dir}/results/apls')
+name_list = os.listdir(os.path.join(_resolve_dir(args.dir), 'results', 'apls'))
 name_list.sort()
 for file_name in name_list :
-    with open(f'../{args.dir}/results/apls/{file_name}') as f:
+    with open(os.path.join(_resolve_dir(args.dir), 'results', 'apls', f'{file_name}')) as f:
         lines = f.readlines()
     # print(file_name,lines[0].split(' ')[-1])
     # print(lines[0].split(' '))
