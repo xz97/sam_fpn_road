@@ -161,3 +161,21 @@ results/final/*.csv
 
 # cityscale_metrics local copies / accidental nested dirs
 cityscale_metrics/cityscale/
+
+# ===== local datasets symlinks / mounts =====
+cityscale
+spacenet
+spacenet_root
+
+# ===== local backups / temp =====
+*_bak_*/
+*.bak.*
+*.bak_*
+cityscale_metrics.bak.*/
+spacenet._bak_*/
+spacenet_metrics/*bak*/
+
+# ===== local tools (if you don't want them tracked, comment out if needed) =====
+# tools/run_cityscale_apls_official_main_go.sh
+# tools/run_infer_spacenet.py
+
