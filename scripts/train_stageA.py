@@ -3,6 +3,29 @@ import json
 import subprocess
 import socket
 import datetime
+
+def apply_freeze_sam(model, freeze_sam: bool):
+    """
+    Freeze SAM-related modules for Stage D:
+      - freeze: image_encoder / prompt_encoder / mask_decoder
+      - keep trainable: cnn_stem / fuse_conv / fpn / map_decoder / topo_net
+    """
+    if not freeze_sam:
+        return
+
+    freeze_keys = ["image_encoder", "prompt_encoder", "mask_decoder"]
+    keep_keys   = ["cnn_stem", "fuse_conv", "fpn", "map_decoder", "topo_net"]
+
+    for name, p in model.named_parameters():
+        if any(k in name for k in keep_keys):
+            p.requires_grad = True
+        elif any(k in name for k in freeze_keys):
+            p.requires_grad = False
+    # print a quick summary
+    n_total = sum(1 for _ in model.parameters())
+    n_train = sum(1 for _ in model.parameters() if _.requires_grad)
+    print(f"[FREEZE_SAM] enabled. trainable_params={n_train}/{n_total}")
+
 from argparse import ArgumentParser
 
 import lightning.pytorch as pl
@@ -166,12 +189,21 @@ def main():
     # 8) trainer (reduce console spam)
     # - enable_progress_bar=False: stop tqdm progress bar spam
     # - log_every_n_steps: control how often metrics are printed/logged
+    # ---- Force checkpoints for reproducibility ----
+    ckpt_cb = pl.callbacks.ModelCheckpoint(
+        dirpath=os.path.join(args.run_dir, "checkpoints"),
+        filename="last-{epoch:02d}-{step:07d}",
+        save_last=True,
+        save_top_k=0,
+        every_n_train_steps=args.every_n_train_steps,
+    )
+
     trainer = pl.Trainer(
         default_root_dir=run_dir,
         max_epochs=config.TRAIN_EPOCHS,
         check_val_every_n_epoch=1,
         num_sanity_val_steps=2,
-        callbacks=[checkpoint_callback, lr_monitor],
+        callbacks=[checkpoint_callback, lr_monitor, ckpt_cb],
         logger=logger,
         precision="16-mixed" if args.precision == 16 else 32,
         log_every_n_steps=args.log_every_n_steps,

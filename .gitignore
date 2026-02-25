@@ -179,3 +179,31 @@ spacenet_metrics/*bak*/
 # tools/run_cityscale_apls_official_main_go.sh
 # tools/run_infer_spacenet.py
 
+model.py.broken_stageD_*
+
+# ====== artifacts (DO NOT COMMIT) ======
+/mnt/data/
+/outputs/
+/save/
+/save/save/
+/**/*.ckpt
+**/*.pth
+**/*.pt
+**/*.p
+**/*.png
+**/*.tif
+**/*.tiff
+**/*.json
+**/*.csv
+**/logs/
+/**/checkpoints/
+
+# ====== local backups / temp files ======
+**/*.bak
+**/*.bak_*
+model_stageD.py
+model_stageC_backup.py
+model.py.bad_*
+scripts/train_stageA.py.bak
+tools/gen_stageD_model.py
+cityscale_metrics/topo.bash.bak

@@ -1,0 +1,11 @@
+Stage D CityScale (Phase-1)
+RUN_NAME=20260224_stageD_cityscale_16x16_cnnstem_fpn_phase1
+CKPT_BEST=best-09-0025000-0.1030.ckpt
+
+TOPO=0.7713292271943977
+Precision=0.9053966593826659
+Recall=0.6752536050269028
+
+APLS_mean=0.662665185
+APLS_std=0.138814070
+tiles=27

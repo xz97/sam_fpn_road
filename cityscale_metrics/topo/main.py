@@ -28,6 +28,23 @@ parser.add_argument('-interval', action='store', dest='topo_interval', type=floa
 parser.add_argument('-savedir', type=str)
 
 args = parser.parse_args()
+
+# --- PATCH: support absolute paths for graph_prop / graph_gt ---
+import os
+def _fix_path(x: str):
+    if x is None:
+        return x
+    x = str(x)
+    # keep empty string as-is
+    if x.strip() == "":
+        return x
+    # if absolute path, return as-is; otherwise keep original behavior
+    return x if os.path.isabs(x) else x
+
+args.graph_prop = _fix_path(args.graph_prop)
+args.graph_gt = _fix_path(args.graph_gt)
+# -------------------------------------------------------------
+
 print(args)
 
 

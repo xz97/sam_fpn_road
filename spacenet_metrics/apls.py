@@ -1,5 +1,13 @@
 import numpy as np
 import os
+
+def _basedir(d: str) -> str:
+    import os
+    # args.dir may be absolute or relative (e.g., save/save/xxx)
+    if os.path.isabs(d):
+        return d
+    return os.path.join("..", d)
+
 import argparse
 import json
 
@@ -37,5 +45,5 @@ apls_np = np.array(apls, dtype=float)
 valid = np.isfinite(apls_np)
 print('APLS', float(np.nanmean(apls_np)))
 print('APLS_valid', int(valid.sum()), '/', int(len(apls_np)))
-with open(f'../{args.dir}/results/apls.json','w') as jf:
+with open(os.path.join(_basedir(args.dir), 'results', 'apls.json'),'w') as jf:
     json.dump({'apls':output_apls,'final_APLS':np.mean(apls)},jf)
