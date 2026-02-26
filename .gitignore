@@ -207,3 +207,15 @@ model.py.bad_*
 scripts/train_stageA.py.bak
 tools/gen_stageD_model.py
 cityscale_metrics/topo.bash.bak
+
+# ===== runtime symlinks / scratch =====
+_pred
+cityscale_metrics/_pred
+spacenet_metrics/_pred
+
+# old/extra configs (scratch)
+config/toponet_vitb_256_spacenet_stageD_cnnstem_fpn.yaml
+config/toponet_vitb_256_spacenet_stageD_cnnstem_fpn_phase1.yaml
+
+# old metrics scratch
+results/metrics_stageD_spacenet.txt
