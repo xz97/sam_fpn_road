@@ -1,0 +1,9 @@
+Stage D CityScale (SAM UNFREEZE, from StageA best)
+RUN_NAME=20260225_stageD_cityscale_16x16_cnnstem_fpn_unfreeze_from_stageA
+
+TOPO=0.7699805897893975
+Precision=0.8897898458944526
+Recall=0.6813407379821419
+
+APLS_mean=0.677377000
+tiles=27

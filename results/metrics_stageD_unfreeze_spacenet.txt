@@ -1,0 +1,8 @@
+Stage D SpaceNet (SAM UNFREEZE, from StageA best)
+RUN_NAME=20260225_stageD_spacenet_16x16_cnnstem_fpn_unfreeze_from_stageA
+
+TOPO_mean=0.782983986
+Precision_mean=0.904969740
+Recall_mean=0.653506721
+
+APLS=0.6940591784702549
