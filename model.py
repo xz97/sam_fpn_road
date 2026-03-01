@@ -1,6 +1,8 @@
 import torch
 import torch.nn.functional as F
 from torch import nn
+from losses.cldice import cldice_loss
+
 
 # from torchvision.ops import nms
 import matplotlib.pyplot as plt
@@ -461,6 +463,19 @@ class SAMRoad(pl.LightningModule):
             self.mask_criterion = torch.nn.BCEWithLogitsLoss()
         self.topo_criterion = torch.nn.BCEWithLogitsLoss(reduction='none')
 
+        # clDice switches (read from yaml)
+        self.use_cldice = bool(getattr(self.config, "USE_CLDICE", False))
+        self.cldice_w   = float(getattr(self.config, "CLDICE_WEIGHT", 0.5))
+        self.cldice_alpha  = float(getattr(self.config, "CLDICE_ALPHA", 0.5))
+        self.cldice_iters  = int(getattr(self.config, "CLDICE_ITERS", 10))
+        self.cldice_smooth = float(getattr(self.config, "CLDICE_SMOOTH", 1.0))
+
+        print(f"[CFG] USE_CLDICE={self.use_cldice} w={self.cldice_w} alpha={self.cldice_alpha} iters={self.cldice_iters} smooth={self.cldice_smooth}")
+
+
+
+
+
         #### Metrics
         self.keypoint_iou = BinaryJaccardIndex(threshold=0.5)
         self.road_iou = BinaryJaccardIndex(threshold=0.5)
@@ -688,8 +703,51 @@ class SAMRoad(pl.LightningModule):
         # [B, H, W, 2]
         mask_logits, mask_scores, topo_logits, topo_scores = self(rgb, graph_points, pairs, valid)
 
-        gt_masks = torch.stack([keypoint_mask, road_mask], dim=3)
-        mask_loss = self.mask_criterion(mask_logits, gt_masks)
+
+        # ---- split keypoint/road mask losses (Stage A compatible) ----
+
+
+        key_logits  = mask_logits[..., 0]
+
+
+        road_logits = mask_logits[..., 1]
+
+
+
+        key_loss = self.mask_criterion(key_logits, keypoint_mask)
+
+
+        road_bce = self.mask_criterion(road_logits, road_mask)
+
+
+
+        road_loss = road_bce
+
+
+        road_cl = torch.tensor(0.0, device=road_logits.device)
+
+
+
+        if self.use_cldice and self.cldice_w > 0:
+
+
+            road_prob = torch.sigmoid(road_logits)
+
+
+            road_cl = cldice_loss(road_prob, road_mask, iters=self.cldice_iters, smooth=self.cldice_smooth)
+
+
+            road_loss = road_bce + self.cldice_w * road_cl
+
+
+
+        mask_loss = key_loss + road_loss
+        # --- clDice logging ---
+        self.log('train_key_loss', key_loss, on_step=True, on_epoch=False, prog_bar=False)
+        self.log('train_road_bce', road_bce, on_step=True, on_epoch=False, prog_bar=False)
+        if self.use_cldice and self.cldice_w > 0:
+            self.log('train_road_cldice', road_cl, on_step=True, on_epoch=False, prog_bar=False)
+            self.log('train_cldice_w', torch.tensor(self.cldice_w, device=road_logits.device), on_step=True, on_epoch=False, prog_bar=False)
 
         topo_gt, topo_loss_mask = batch['connected'].to(torch.int32), valid.to(torch.float32)
         # [B, N_samples, N_pairs, 1]
@@ -724,10 +782,50 @@ class SAMRoad(pl.LightningModule):
         # masks: [B, H, W, 2] topo: [B, N_samples, N_pairs, 1]
         mask_logits, mask_scores, topo_logits, topo_scores = self(rgb, graph_points, pairs, valid)
 
-        gt_masks = torch.stack([keypoint_mask, road_mask], dim=3)
+
+        # ---- split keypoint/road mask losses (Stage A compatible) ----
 
 
-        mask_loss = self.mask_criterion(mask_logits, gt_masks)
+        key_logits  = mask_logits[..., 0]
+
+
+        road_logits = mask_logits[..., 1]
+
+
+
+        key_loss = self.mask_criterion(key_logits, keypoint_mask)
+
+
+        road_bce = self.mask_criterion(road_logits, road_mask)
+
+
+
+        road_loss = road_bce
+
+
+        road_cl = torch.tensor(0.0, device=road_logits.device)
+
+
+
+        if self.use_cldice and self.cldice_w > 0:
+
+
+            road_prob = torch.sigmoid(road_logits)
+
+
+            road_cl = cldice_loss(road_prob, road_mask, iters=self.cldice_iters, smooth=self.cldice_smooth)
+
+
+            road_loss = road_bce + self.cldice_w * road_cl
+
+
+
+        mask_loss = key_loss + road_loss
+        # --- clDice logging (val) ---
+        self.log('val_key_loss', key_loss, on_step=False, on_epoch=True, prog_bar=False)
+        self.log('val_road_bce', road_bce, on_step=False, on_epoch=True, prog_bar=False)
+        if self.use_cldice and self.cldice_w > 0:
+            self.log('val_road_cldice', road_cl, on_step=False, on_epoch=True, prog_bar=False)
 
         topo_gt, topo_loss_mask = batch['connected'].to(torch.int32), valid.to(torch.float32)
         # [B, N_samples, N_pairs, 1]
