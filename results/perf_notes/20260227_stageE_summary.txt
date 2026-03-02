@@ -1,0 +1,6 @@
+
+[StageE SpaceNet FINAL]
+- APLS=0.7023322427745665 (valid 346/346)
+- TOPO_mean=0.767441898  P_mean=0.869829564  R_mean=0.647747797
+- FINAL_SUMMARY:
+  save/spacenet_toponet_16x16_20260227_stageE_spacenet_16x16_cnnstem_fpn_unfreeze_cldice_from_stageA_infer/eval/final/FINAL_SUMMARY.txt
