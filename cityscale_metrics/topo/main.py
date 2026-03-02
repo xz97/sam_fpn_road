@@ -163,6 +163,51 @@ for tile_idx in [8, 9, 19, 28, 29, 39, 48, 49, 59, 68, 69, 79, 88, 89, 99, 108, 
         r = 0.00150 # around 150 meters
 
     topoResult =  topo.TOPOWithPairs(graph_prop, graph_gt, lmap, losm, r =r, step = args.topo_interval, threshold = args.matching_threshold, outputfile = args.output, one2oneMatching = True, metaData = None)
+    # --- PATCH: emit scalar metrics in a stable format (once debug + every tile metric line) ---
+    if not hasattr(args, '_topo_debug_done'):
+        args._topo_debug_done = True
+        print('[DEBUG] topoResult repr:', repr(topoResult)[:2000])
+
+    # try to extract scalar P/R/TOPO from common topoResult structures
+    P=R=T=None
+    try:
+        # dict-like
+        if isinstance(topoResult, dict):
+            for k in ['P','p','precision','Precision']:
+                if k in topoResult: P=float(topoResult[k]); break
+            for k in ['R','r','recall','Recall']:
+                if k in topoResult: R=float(topoResult[k]); break
+            for k in ['TOPO','topo','Topo','F','f1','score']:
+                if k in topoResult: T=float(topoResult[k]); break
+        # tuple/list-like: try last 3 numbers
+        if (P is None or R is None or T is None) and isinstance(topoResult, (list,tuple)) and len(topoResult)>=3:
+            tail = topoResult[-3:]
+            if all(isinstance(x,(int,float)) for x in tail):
+                P,R,T = map(float, tail)
+    except Exception as e:
+        print('[WARN] cannot parse topoResult scalars:', e)
+
+    # append a clean metric line to the txt output for THIS tile
+    try:
+        with open(args.output, 'a') as _f:
+            if P is not None and R is not None and T is not None:
+                _f.write(f"\nMETRIC P={P:.6f} R={R:.6f} TOPO={T:.6f}\n")
+            else:
+                _f.write("\nMETRIC P=nan R=nan TOPO=nan\n")
+    except Exception as e:
+        print('[WARN] cannot append METRIC line:', e)
+    # --- DEBUG: inspect topoResult once ---
+    if not hasattr(args, '_debug_topoResult_done'):
+        args._debug_topoResult_done = True
+        print('[DEBUG] topoResult type:', type(topoResult))
+        try:
+            print('[DEBUG] topoResult keys:', list(topoResult.keys())[:50])
+        except Exception as e:
+            print('[DEBUG] topoResult not dict:', e)
+        try:
+            print('[DEBUG] topoResult len:', len(topoResult))
+        except Exception as e:
+            print('[DEBUG] topoResult no len:', e)
 
     print('=========',args.output,'==================')
     # print(topoResult)
