@@ -255,7 +255,8 @@ if __name__ == "__main__":
 
     if config.DATASET == 'cityscale':
         _, _, test_img_indices = cityscale_data_partition()
-        rgb_pattern = './cityscale/20cities/region_{}_sat.png'
+        CITYSCALE_ROOT = os.environ.get('CITYSCALE_DATA_ROOT', '/mnt/data/datasets/cityscale')
+        rgb_pattern = f"{CITYSCALE_ROOT}/20cities/region_{{}}_sat.png"
         gt_graph_pattern = 'cityscale/20cities/region_{}_graph_gt.pickle'
     elif config.DATASET == 'spacenet':
         _, _, test_img_indices = spacenet_data_partition()

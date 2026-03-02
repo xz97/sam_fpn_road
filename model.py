@@ -13,11 +13,38 @@ from functools import partial
 from torchmetrics.classification import BinaryJaccardIndex, F1Score, BinaryPrecisionRecallCurve
 
 import lightning.pytorch as pl
-from sam.segment_anything.modeling.image_encoder import ImageEncoderViT
-from sam.segment_anything.modeling.mask_decoder import MaskDecoder
-from sam.segment_anything.modeling.prompt_encoder import PromptEncoder
-from sam.segment_anything.modeling.transformer import TwoWayTransformer
-from sam.segment_anything.modeling.common import LayerNorm2d
+# segment-anything import (compat)
+try:
+    # old layout (some forks)
+    from sam.segment_anything.modeling.image_encoder import ImageEncoderViT
+except ModuleNotFoundError:
+    # common layout (segment-anything / segment-anything-road)
+    from segment_anything.modeling.image_encoder import ImageEncoderViT
+
+# segment-anything import (compat)
+try:
+    from sam.segment_anything.modeling.mask_decoder import MaskDecoder
+except ModuleNotFoundError:
+    from segment_anything.modeling.mask_decoder import MaskDecoder
+
+# segment-anything import (compat)
+try:
+    from sam.segment_anything.modeling.prompt_encoder import PromptEncoder
+except ModuleNotFoundError:
+    from segment_anything.modeling.prompt_encoder import PromptEncoder
+
+# segment-anything import (compat)
+try:
+    from sam.segment_anything.modeling.transformer import TwoWayTransformer
+except ModuleNotFoundError:
+    from segment_anything.modeling.transformer import TwoWayTransformer
+
+# segment-anything import (compat)
+try:
+    from sam.segment_anything.modeling.common import LayerNorm2d
+except ModuleNotFoundError:
+    from segment_anything.modeling.common import LayerNorm2d
+
 
 import wandb
 import pprint
