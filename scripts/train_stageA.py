@@ -52,6 +52,7 @@ def main():
     parser.add_argument("--precision", default=16, type=int, help="16 or 32")
     parser.add_argument("--every_n_train_steps", default=2000, type=int, help="(reserved) update interval")
     parser.add_argument("--log_every_n_steps", default=200, type=int, help="reduce console spam")
+    parser.add_argument("--init_ckpt", default=None, help="weight-only init ckpt (no optimizer/scheduler)")
     args = parser.parse_args()
 
     # 0) repo root (important: dataset paths are relative like ./cityscale/...)
@@ -98,7 +99,15 @@ def main():
     # 4) model
     net = SAMRoad(config)
 
-    # 5) datasets / loaders
+    
+    # weight-only init (does NOT restore optimizer/scheduler)
+    if args.init_ckpt:
+        ckpt = torch.load(args.init_ckpt, map_location="cpu")
+        state = ckpt.get("state_dict", ckpt)
+        missing, unexpected = net.load_state_dict(state, strict=False)
+        print(f"[INIT] weight-only init from {args.init_ckpt}")
+        print(f"[INIT] missing={len(missing)} unexpected={len(unexpected)}")
+# 5) datasets / loaders
     train_ds = SatMapDataset(config, is_train=True, dev_run=False)
     val_ds   = SatMapDataset(config, is_train=False, dev_run=False)
 
