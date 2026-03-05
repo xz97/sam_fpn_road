@@ -10,10 +10,16 @@ args = parser.parse_args()
 
 apls = []
 output_apls = []
-name_list = os.listdir(f'../{args.dir}/results/apls')
+# resolve pred dir robustly (accept abs or rel)
+base = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+pred_dir = args.dir
+if not os.path.isabs(pred_dir):
+    pred_dir = os.path.abspath(os.path.join(base, pred_dir))
+apls_dir = os.path.join(pred_dir, "results", "apls")
+name_list = os.listdir(apls_dir)
 name_list.sort()
 for file_name in name_list :
-    with open(f'../{args.dir}/results/apls/{file_name}') as f:
+    with open(os.path.join(apls_dir, file_name)) as f:
         lines = f.readlines()
     # print(file_name,lines[0].split(' ')[-1])
     # print(lines[0].split(' '))
