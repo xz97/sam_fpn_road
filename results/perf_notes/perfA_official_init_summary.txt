@@ -7,3 +7,10 @@ PRED=save/spacenet_toponet_16x16_20260302_perfA_spacenet_official_init_main_infe
 [perfA CityScale official-init | 20260303_perfA_cityscale_official_init_main]
 FINAL_SUMMARY=/home/ubuntu/repos/sam_road/save/cityscale_toponet_16x16_20260303_perfA_cityscale_official_init_main_infer/eval/final/FINAL_SUMMARY.txt
 S3=s3://samroad-20260115-5976/runs/20260303_perfA_cityscale_official_init_main/FINAL_SUMMARY.txt
+
+[perfA CityScale official-init | 20260303_perfA_cityscale_official_init_main]
+APLS_mean=0.666388667  APLS_std=0.139210930
+TOPO: see eval/topo/topo_cityscale_official.log (MEAN Prec/Rec/F1)
+PRED=save/cityscale_toponet_16x16_20260303_perfA_cityscale_official_init_main_infer
+FINAL_SUMMARY=save/cityscale_toponet_16x16_20260303_perfA_cityscale_official_init_main_infer/eval/final/FINAL_SUMMARY.txt
+S3=s3://samroad-20260115-5976/runs/20260303_perfA_cityscale_official_init_main/FINAL_SUMMARY.txt
