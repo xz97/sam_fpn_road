@@ -1,0 +1,6 @@
+
+[StageB SpaceNet clDice | 20260305_stageB_spacenet_cldice_from_perfA_stageA]
+APLS=0.7057614237288136 (valid 354/354)
+TOPO_mean=0.800647637  P_mean=0.905724183  R_mean=0.682236710
+FINAL_SUMMARY=save/spacenet_toponet_16x16_20260305_stageB_spacenet_cldice_from_perfA_stageA_infer/eval/final/FINAL_SUMMARY.txt
+S3=s3://samroad-20260115-5976/runs/20260305_stageB_spacenet_cldice_from_perfA_stageA/FINAL_SUMMARY.txt
