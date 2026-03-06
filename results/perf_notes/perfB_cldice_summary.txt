@@ -8,3 +8,7 @@ S3=s3://samroad-20260115-5976/runs/20260305_stageB_spacenet_cldice_from_perfA_st
 [StageB SpaceNet threshold sweep best (APLS+TOPO) | fixed choice]
 Choose ROAD_THRESHOLD=0.32, ITSC_THRESHOLD=0.19
 Reason: highest APLS (0.707708...) + near-best TOPO (0.806740...)
+
+[StageB CityScale clDice | 20260306_stageB_cityscale_cldice_from_perfA_stageA]
+FINAL_SUMMARY=save/cityscale_toponet_16x16_20260306_stageB_cityscale_cldice_from_perfA_stageA_infer/eval/final/FINAL_SUMMARY.txt
+S3=s3://samroad-20260115-5976/runs/20260306_stageB_cityscale_cldice_from_perfA_stageA/FINAL_SUMMARY.txt
