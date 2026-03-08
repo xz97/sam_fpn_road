@@ -16,3 +16,7 @@ S3=s3://samroad-20260115-5976/runs/20260306_stageB_cityscale_cldice_from_perfA_s
 [StageB CityScale threshold sweep best choice]
 Choose ROAD_THRESHOLD=0.36, ITSC_THRESHOLD=0.22
 APLS_mean=0.670658593  TOPO_F1=0.770599
+
+[StageB CityScale threshold sweep best choice]
+Choose ROAD_THRESHOLD=0.36, ITSC_THRESHOLD=0.22
+APLS_mean=0.670658593  TOPO_F1=0.770599
