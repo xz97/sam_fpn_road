@@ -1,0 +1,10 @@
+
+[SpaceNet StageD | 20260306_stageD_spacenet_cnnstem_fpn_unfreeze_from_perfA_stageA]
+APLS=0.7092534225352113
+TOPO_mean=0.804612486  P_mean=0.903248941  R_mean=0.690489816
+FINAL_SUMMARY=save/spacenet_toponet_16x16_20260306_stageD_spacenet_cnnstem_fpn_unfreeze_from_perfA_stageA_infer/eval/final/FINAL_SUMMARY.txt
+
+[SpaceNet StageE | 20260307_stageE_spacenet_cnnstem_fpn_unfreeze_cldice_from_perfA_stageA]
+APLS=0.7035522921348315
+TOPO_mean=0.801931593  P_mean=0.897000559  R_mean=0.688434437
+FINAL_SUMMARY=save/spacenet_toponet_16x16_20260307_stageE_spacenet_cnnstem_fpn_unfreeze_cldice_from_perfA_stageA_infer/eval/final/FINAL_SUMMARY.txt
