@@ -10,3 +10,7 @@ APLS=0.7092534225352113
 TOPO_mean=0.804612486  P_mean=0.903248941  R_mean=0.690489816
 FINAL_SUMMARY=save/spacenet_toponet_16x16_20260306_stageD_spacenet_cnnstem_fpn_unfreeze_from_perfA_stageA_infer/eval/final/FINAL_SUMMARY.txt
 S3=s3://samroad-20260115-5976/runs/20260306_stageD_spacenet_cnnstem_fpn_unfreeze_from_perfA_stageA/FINAL_SUMMARY.txt
+
+[StageD SpaceNet | 20260306_stageD_spacenet_cnnstem_fpn_unfreeze_from_perfA_stageA]
+FINAL_SUMMARY=save/spacenet_toponet_16x16_20260306_stageD_spacenet_cnnstem_fpn_unfreeze_from_perfA_stageA_infer/eval/final/FINAL_SUMMARY.txt
+S3=s3://samroad-20260115-5976/runs/20260306_stageD_spacenet_cnnstem_fpn_unfreeze_from_perfA_stageA/FINAL_SUMMARY.txt
